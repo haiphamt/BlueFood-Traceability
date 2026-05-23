@@ -1,0 +1,21 @@
+{
+  "name": "bluefood-app",
+  "private": true,
+  "scripts": {
+    "dev:web": "pnpm --filter web dev",
+    "dev:mobile": "npm start --prefix apps/mobile",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "supabase": "node ./node_modules/supabase/dist/supabase.js",
+    "postinstall": "node apps/web/scripts/fix-react-pdf-scheduler.mjs"
+  },
+  "devDependencies": {
+    "supabase": "^2.101.0",
+    "typescript": "^5.4.5"
+  },
+  "pnpm": {
+    "overrides": {
+      "scheduler": "^0.23.2"
+    }
+  }
+}

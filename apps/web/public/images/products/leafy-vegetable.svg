@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <rect width="400" height="400" fill="url(#bg)"/>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#dcfce7"/>
+      <stop offset="100%" stop-color="#bbf7d0"/>
+    </linearGradient>
+    <linearGradient id="leaf-outer" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#86efac"/>
+      <stop offset="100%" stop-color="#4ade80"/>
+    </linearGradient>
+    <linearGradient id="leaf-mid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#4ade80"/>
+      <stop offset="100%" stop-color="#22c55e"/>
+    </linearGradient>
+    <linearGradient id="leaf-inner" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#22c55e"/>
+      <stop offset="100%" stop-color="#16a34a"/>
+    </linearGradient>
+    <linearGradient id="leaf-center" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#16a34a"/>
+      <stop offset="100%" stop-color="#15803d"/>
+    </linearGradient>
+    <filter id="soft" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="2"/>
+    </filter>
+  </defs>
+
+  <!-- Shadow under plant -->
+  <ellipse cx="200" cy="355" rx="70" ry="18" fill="#052e16" opacity="0.12" filter="url(#soft)"/>
+
+  <!-- Far outer leaves (back row) -->
+  <path d="M200 345 Q100 250 108 110 Q148 230 170 320 Z" fill="url(#leaf-outer)"/>
+  <path d="M200 345 Q300 250 292 110 Q252 230 230 320 Z" fill="url(#leaf-outer)"/>
+  <path d="M200 345 Q75 275 82 135 Q132 240 158 315 Z" fill="#a7f3d0" opacity="0.8"/>
+  <path d="M200 345 Q325 275 318 135 Q268 240 242 315 Z" fill="#a7f3d0" opacity="0.8"/>
+
+  <!-- Middle leaves -->
+  <path d="M200 338 Q115 245 120 115 Q158 230 175 318 Z" fill="url(#leaf-mid)"/>
+  <path d="M200 338 Q285 245 280 115 Q242 230 225 318 Z" fill="url(#leaf-mid)"/>
+
+  <!-- Inner compact leaves -->
+  <path d="M200 330 Q135 240 142 125 Q172 230 182 315 Z" fill="url(#leaf-inner)"/>
+  <path d="M200 330 Q265 240 258 125 Q228 230 218 315 Z" fill="url(#leaf-inner)"/>
+
+  <!-- Center romaine head -->
+  <ellipse cx="200" cy="228" rx="35" ry="115" fill="url(#leaf-center)"/>
+  <ellipse cx="200" cy="220" rx="22" ry="95" fill="#15803d"/>
+  <ellipse cx="200" cy="210" rx="13" ry="78" fill="#14532d"/>
+
+  <!-- Leaf vein lines on outer leaves -->
+  <path d="M120 120 Q124 200 130 310" stroke="#052e16" stroke-width="0.8" opacity="0.18" fill="none"/>
+  <path d="M280 120 Q276 200 270 310" stroke="#052e16" stroke-width="0.8" opacity="0.18" fill="none"/>
+  <path d="M150 120 Q153 195 158 305" stroke="#052e16" stroke-width="0.6" opacity="0.14" fill="none"/>
+  <path d="M250 120 Q247 195 242 305" stroke="#052e16" stroke-width="0.6" opacity="0.14" fill="none"/>
+
+  <!-- Center vein -->
+  <path d="M200 115 Q201 230 200 335" stroke="#052e16" stroke-width="1" opacity="0.22" fill="none"/>
+
+  <!-- Side veins on center head -->
+  <path d="M190 130 Q192 200 191 318" stroke="#052e16" stroke-width="0.6" opacity="0.18" fill="none"/>
+  <path d="M210 130 Q208 200 209 318" stroke="#052e16" stroke-width="0.6" opacity="0.18" fill="none"/>
+
+  <!-- Light highlight on center -->
+  <ellipse cx="193" cy="175" rx="7" ry="28" fill="white" opacity="0.14"/>
+
+  <!-- Root/stem base -->
+  <rect x="185" y="340" width="30" height="14" rx="7" fill="#052e16" opacity="0.22"/>
+</svg>

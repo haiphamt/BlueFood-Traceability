@@ -1,0 +1,34 @@
+{
+  "expo": {
+    "name": "BlueFood",
+    "slug": "bluefood-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "bluefood",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#15231b"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "vn.bluefood.traceability"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#15231b"
+      },
+      "package": "vn.bluefood.traceability",
+      "permissions": ["android.permission.CAMERA"]
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "BlueFood cần truy cập camera để quét mã QR."
+        }
+      ]
+    ]
+  }
+}

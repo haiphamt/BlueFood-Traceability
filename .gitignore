@@ -1,0 +1,70 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+package-lock.json
+
+# Next.js
+apps/web/.next/
+apps/web/out/
+.vercel/
+
+# Expo
+.expo/
+.expo-shared/
+.expo-start-*.out
+.expo-start-*.err
+apps/mobile/.expo/
+apps/mobile/android/
+apps/mobile/ios/
+apps/mobile/web-build/
+
+# Build outputs
+dist/
+packages/contracts/artifacts/
+packages/contracts/cache/
+packages/contracts/typechain-types/
+packages/contracts/ignition/deployments/
+
+# Tool/build/test cache
+.turbo/
+coverage/
+test-output/
+apps/web/test-*.pdf
+apps/web/verification/
+
+# Local generated exports
+bao-cao-*.csv
+du-lieu-*.csv
+
+# Environment files - never commit secrets
+.env
+.env.local
+.env*.local
+apps/mobile/.env
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Browser automation profiles
+apps/web/verification/chrome-profile/
+apps/web/verification/chrome-profile-mobile/
+apps/web/verification/*profile*/
+**/chrome-profile/
+**/chrome-profile-mobile/
+
+# Supabase
+supabase/.branches/
+supabase/.temp/
+
+# TypeScript
+*.tsbuildinfo
