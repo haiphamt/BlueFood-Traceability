@@ -312,12 +312,3 @@ Chạy worker anchor blockchain:
 ```powershell
 corepack pnpm --filter web worker
 ```
-
----
-
-## LƯU Ý KHI NỘP ĐỒ ÁN
-
-* Không commit `node_modules`, `.next`, `.expo`, `dist`, log, file `.env` thật hoặc khóa bí mật.
-* Source nộp cần bao gồm toàn bộ mã nguồn, file README và script database trong thư mục `supabase/`.
-* Nếu nộp file zip, nên nén toàn bộ thư mục `bluefood-app/` sau khi loại bỏ cache build và dependency cục bộ.
-* File `.env.local.example` và `.env.example` được commit để người chấm biết cần cấu hình biến môi trường nào.
