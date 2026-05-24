@@ -10,6 +10,7 @@
     "postinstall": "node apps/web/scripts/fix-react-pdf-scheduler.mjs"
   },
   "devDependencies": {
+    "next": "14.2.35",
     "supabase": "^2.101.0",
     "typescript": "^5.4.5"
   },
