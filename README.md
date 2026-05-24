@@ -45,11 +45,11 @@ Các chức năng chính:
 ## THÀNH VIÊN NHÓM
 | STT | MSSV | Họ và Tên | Github | Email |
 |-----|:----:|-----------|--------|-------|
-| 1 | 24520306 | Phạm Công Định | - | 24520306@gm.uit.edu.vn |
-| 2 | 24520309 | Đặng Bá Đông | - | 24520309@gm.uit.edu.vn |
-| 3 | 24520442 | Phạm Tuấn Hải | - | 24520442@gm.uit.edu.vn |
-| 4 | 24520483 | Nguyễn Trọng Hiệp | - | 24520483@gm.uit.edu.vn |
-| 5 | 24520677 | Nguyễn Hoàng Huy | - | 24520677@gm.uit.edu.vn |
+| 1 | 24520306 | Phạm Công Định | [Dingglebell](https://github.com/Dingglebell) | 24520306@gm.uit.edu.vn |
+| 2 | 24520309 | Đặng Bá Đông | [dongdang06](https://github.com/dongdang06) | 24520309@gm.uit.edu.vn |
+| 3 | 24520442 | Phạm Tuấn Hải | [haiphamt](https://github.com/haiphamt) | 24520442@gm.uit.edu.vn |
+| 4 | 24520483 | Nguyễn Trọng Hiệp | [HDiup](https://github.com/HDiup) | 24520483@gm.uit.edu.vn |
+| 5 | 24520677 | Nguyễn Hoàng Huy | [HuyNguyen174](https://github.com/HuyNguyen174) | 24520677@gm.uit.edu.vn |
 
 ---
 
