@@ -8,7 +8,6 @@
 ## BẢNG MỤC LỤC
 * [Giới thiệu môn học](#giới-thiệu-môn-học)
 * [Giới thiệu đồ án môn học](#giới-thiệu-đồ-án-môn-học)
-* [Giảng viên hướng dẫn](#giảng-viên-hướng-dẫn)
 * [Thành viên nhóm](#thành-viên-nhóm)
 * [Cài đặt phần mềm](#cài-đặt-phần-mềm)
 * [Khởi chạy dự án](#khởi-chạy-dự-án)
@@ -40,11 +39,6 @@ Các chức năng chính:
 * Ứng dụng mobile Expo cho nhân viên cửa hàng quét QR, xác nhận đã nhận hàng, báo lỗi và đồng bộ dữ liệu khi có kết nối lại.
 * Ghi nhận lịch sử sự kiện chuỗi cung ứng và audit log cho các thay đổi quan trọng.
 * Hỗ trợ cơ chế anchor/verify dữ liệu lên blockchain thông qua smart contract.
-
----
-
-## GIẢNG VIÊN HƯỚNG DẪN
-* ThS. **Tạ Việt Phương** - *phuongtv@uit.edu.vn*
 
 ---
 
