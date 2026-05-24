@@ -1,233 +1,200 @@
 # BlueFood Traceability
 
-Hệ thống quản lý và truy xuất nguồn gốc chuỗi cung ứng nông sản, thực phẩm sạch. Dự án bao gồm ứng dụng web quản trị, cổng thông tin nhà cung cấp, trang truy xuất công khai qua QR và ứng dụng mobile cho nhân viên cửa hàng thao tác online/offline.
+He thong quan ly va truy xuat nguon goc chuoi cung ung nong san, thuc pham sach. Du an gom web quan tri, cong thong tin nha cung cap, trang truy xuat cong khai qua QR va ung dung mobile Expo cho nhan vien cua hang thao tac online/offline.
 
 Repository: https://github.com/haiphamt/BlueFood-Traceability
 
-## Chức Năng Chính
+## Chuc Nang Chinh
 
-- Quản trị sản phẩm, nhà cung cấp, lô hàng, vận chuyển, chứng chỉ và báo cáo trên web.
-- Cổng nhà cung cấp cho phép nhà cung cấp quản lý hồ sơ, lô hàng, thành viên và chứng chỉ cần phê duyệt.
-- Trang truy xuất công khai `/trace/[lotId]` cho người dùng quét QR mà không cần đăng nhập.
-- Ứng dụng mobile cho nhân viên cửa hàng đăng nhập, quét QR, xác nhận nhận hàng, báo lỗi, đánh dấu đã bán và đồng bộ khi có kết nối lại.
-- Ghi nhận audit log cho thay đổi trạng thái lô hàng và các thao tác quan trọng.
-- Hỗ trợ anchor/verify dữ liệu sự kiện lên blockchain thông qua smart contract `BatchRegistry`.
+- Quan ly san pham, nha cung cap, lo hang, van chuyen, chung chi, audit log va bao cao tren web.
+- Cong nha cung cap cho phep supplier quan ly ho so, lo hang, thanh vien, ghi chu va chung chi gan voi lo hang.
+- Trang truy xuat cong khai `/trace/[lotId]` cho khach hang quet QR ma khong can dang nhap.
+- Ung dung mobile cho `store_staff` dang nhap, quet QR, xac nhan da nhan, bao loi, dong bo offline khi co mang lai.
+- Moi thay doi trang thai lo hang duoc ghi nhan vao audit log.
+- Ho tro anchor/verify du lieu su kien len blockchain qua smart contract `BatchRegistry`.
 
-## Công Nghệ Sử Dụng
+## Cong Nghe
 
-| Thành phần          | Công nghệ                                       |
-| ------------------- | ----------------------------------------------- |
-| Monorepo            | pnpm workspace                                  |
-| Web                 | Next.js 14 App Router, TypeScript, Tailwind CSS |
-| Mobile              | Expo React Native                               |
-| Cơ sở dữ liệu       | Supabase PostgreSQL                             |
-| Xác thực            | Supabase Auth                                   |
-| Lưu trữ file        | Supabase Storage                                |
-| Hàng đợi blockchain | BullMQ + Redis                                  |
-| Smart contract      | Solidity, Hardhat                               |
+| Thanh phan | Cong nghe |
+| --- | --- |
+| Monorepo | pnpm workspace |
+| Web | Next.js 14 App Router, TypeScript, Tailwind CSS |
+| Mobile | Expo React Native |
+| Database | Supabase PostgreSQL |
+| Auth | Supabase Auth |
+| Storage | Supabase Storage |
+| Blockchain queue | BullMQ + Redis |
+| Smart contract | Solidity, Hardhat |
 
-## Cấu Trúc Thư Mục
+## Cau Truc Thu Muc
 
 ```text
 bluefood-app/
   apps/
-    web/                    Ứng dụng web, API routes, portal, trang trace QR
-    mobile/                 Ứng dụng Expo React Native cho nhân viên cửa hàng
+    web/        Next.js web, API routes, portal, trang trace QR
+    mobile/     Expo React Native app cho nhan vien cua hang
   packages/
-    shared/                 Hằng số, kiểu dữ liệu và schema dùng chung
-    contracts/              Smart contract BatchRegistry và script deploy
-  supabase/                 Script database cần kèm khi nộp source
-    migrations/             Các file SQL tạo schema, trigger, policy
-    seed.sql                Dữ liệu mẫu
-    actual_public_data.sql  Dữ liệu public schema export từ môi trường test hiện tại
-  package.json
-  pnpm-workspace.yaml
-  README.md
+    shared/     Kieu du lieu va hang so dung chung
+    contracts/  Smart contract BatchRegistry va script deploy
+  supabase/
+    migrations/             SQL schema, trigger, policy
+    seed.sql                Du lieu mau
+    actual_public_data.sql  Du lieu public schema export tu moi truong test
 ```
 
-Lưu ý: khi đóng gói source để nộp, cần kèm thư mục `supabase/` chứa script database. Nếu thư mục này chưa có trong bản làm việc hiện tại, hãy bổ sung lại migration và seed SQL trước khi nén file zip.
+## Yeu Cau Moi Truong
 
-## Yêu Cầu Môi Trường
-
-- Node.js 20 trở lên.
-- Corepack/pnpm.
+- Node.js 20 tro len.
+- Corepack va pnpm.
 - Supabase project.
-- Expo Go hoặc môi trường chạy Expo cho mobile.
-- Redis nếu cần chạy worker anchor blockchain.
-- Tài khoản RPC blockchain nếu cần deploy/verify smart contract trên testnet.
+- Tai khoan Vercel de deploy web.
+- Expo Go tren iPhone/Android de demo mobile.
+- Redis/RPC blockchain chi can khi demo chuc nang anchor blockchain.
 
-Kiểm tra nhanh:
+## Cai Dat Source
 
-```powershell
-node -v
-corepack --version
-```
-
-## Cài Đặt Source
-
-Từ thư mục gốc `bluefood-app/`:
+Tu thu muc goc `bluefood-app/`:
 
 ```powershell
 corepack enable
 corepack pnpm install
 ```
 
-Nếu chạy trên Windows PowerShell và pnpm yêu cầu cài đặt lại dependency, có thể dùng:
+Kiem tra typecheck:
 
 ```powershell
-$env:CI='true'; corepack pnpm install --no-frozen-lockfile
+corepack pnpm --filter web typecheck
+corepack pnpm --filter mobile typecheck
 ```
 
-## Cấu Hình Biến Môi Trường
+## Cau Hinh Supabase
 
-### Web
+1. Tao Supabase project.
+2. Vao SQL Editor va chay cac file trong `supabase/migrations/` theo thu tu:
+   - `0001_initial_schema.sql`
+   - `0002_blockchain.sql`
+   - `0003_portal_store_extensions.sql`
+3. Chay `supabase/seed.sql` neu can du lieu mau, hoac `supabase/actual_public_data.sql` neu muon khoi phuc du lieu test hien tai.
+4. Kiem tra cac bucket Storage:
+   - `product-images`
+   - `batch-images`
+   - `certificates`
+   - `supplier-logos`
+5. Tao user demo trong Supabase Auth va dam bao bang `profiles` co role phu hop: `admin`, `store_staff`, `supplier`.
 
-Tạo file `apps/web/.env.local` từ file mẫu:
+## Deploy Web Len Vercel
 
-```powershell
-Copy-Item apps/web/.env.local.example apps/web/.env.local
+Import repository:
+
+```text
+https://github.com/haiphamt/BlueFood-Traceability
 ```
 
-Các biến quan trọng:
+Thiet lap Vercel project:
+
+| Muc | Gia tri |
+| --- | --- |
+| Framework Preset | Next.js |
+| Root Directory | `apps/web` |
+| Install Command | `corepack pnpm install --frozen-lockfile` |
+| Build Command | `corepack pnpm --filter web build` |
+
+Them Environment Variables tren Vercel:
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_APP_URL=https://your-bluefood.vercel.app
 
-REDIS_URL=redis://localhost:6379
 POLYGON_RPC_URL=https://your-rpc-url
 BLOCKCHAIN_SUBMITTER_PRIVATE_KEY=0x...
 CONTRACT_ADDRESS=0x...
 NEXT_PUBLIC_POLYGONSCAN_BASE_URL=https://amoy.polygonscan.com
+REDIS_URL=rediss://your-redis-url
 ANCHOR_WEBHOOK_SECRET=change-me
 SUPABASE_WEBHOOK_SECRET=change-me
+SLACK_WEBHOOK_URL=
 ```
 
-Những biến blockchain và Redis chỉ bắt buộc khi chạy chức năng anchor/worker blockchain. Các chức năng quản trị, truy xuất QR và mobile sync có thể chạy với Supabase env trước.
+Trong do bat buoc cho web demo chinh la:
 
-### Mobile
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `NEXT_PUBLIC_APP_URL`
 
-Tạo file `apps/mobile/.env` từ file mẫu:
+Sau khi deploy xong, cap nhat `NEXT_PUBLIC_APP_URL` thanh domain Vercel that, vi QR public va mobile se goi API theo domain nay.
+
+## Cau Hinh Mobile Expo Go
+
+Mobile demo bang Expo Go, khong can build IPA/APK cho do an. Sau khi web da deploy len Vercel, tao file `apps/mobile/.env`:
 
 ```powershell
 Copy-Item apps/mobile/.env.example apps/mobile/.env
 ```
 
-Nội dung:
+Noi dung can tro ve domain Vercel:
 
 ```env
-EXPO_PUBLIC_API_URL=http://localhost:3000
+EXPO_PUBLIC_API_URL=https://your-bluefood.vercel.app
 ```
 
-Khi chạy trên điện thoại thật trong cùng mạng LAN, đổi `localhost` thành IP của máy đang chạy web, vì điện thoại không truy cập được `localhost` của máy tính.
+Chay mobile bang tunnel:
 
-## Cài Đặt Cơ Sở Dữ Liệu
+```powershell
+cd apps/mobile
+npx expo start --tunnel --port 8082
+```
 
-1. Tạo project mới trên Supabase.
-2. Vào **SQL Editor** và chạy các script trong `supabase/migrations/` theo đúng thứ tự tên file.
-3. Chạy `supabase/seed.sql` nếu chỉ cần dữ liệu mẫu, hoặc chạy `supabase/actual_public_data.sql` nếu muốn khôi phục dữ liệu nghiệp vụ đang test hiện tại.
-4. Tạo các bucket Supabase Storage nếu script chưa tạo sẵn:
-   - `product-images`
-   - `batch-images`
-   - `certificates`
-   - `supplier-logos`
-5. Tạo tài khoản demo trong **Authentication > Users**, sau đó gán profile tương ứng trong bảng `profiles`.
+Mo Expo Go tren iPhone va quet QR trong terminal. Khi `EXPO_PUBLIC_API_URL` da tro ve Vercel, dien thoai khong can chung Wi-Fi voi may tinh de goi API web.
 
-Các bảng chính dự án sử dụng:
+Neu tunnel loi do ngrok/mang, co the dung LAN de test tam:
 
-| Bảng                                 | Mục đích                                                          |
-| ------------------------------------ | ----------------------------------------------------------------- |
-| `profiles`                           | Hồ sơ người dùng và phân quyền `admin`, `store_staff`, `supplier` |
-| `products`                           | Dữ liệu master sản phẩm                                           |
-| `suppliers`                          | Dữ liệu nhà cung cấp và hồ sơ portal                              |
-| `stores`, `store_users`              | Cửa hàng và nhân viên cửa hàng                                    |
-| `supplier_users`, `supplier_invites` | Thành viên và lời mời trong portal nhà cung cấp                   |
-| `batches`                            | Lô hàng và trạng thái hiện tại                                    |
-| `batch_events`                       | Lịch sử sự kiện chuỗi cung ứng của lô hàng                        |
-| `certificates`                       | Chứng chỉ gắn với lô hàng và nhà cung cấp                         |
-| `shipments`                          | Thông tin vận chuyển                                              |
-| `audit_logs`                         | Nhật ký audit cho thay đổi quan trọng                             |
-| `qr_scan_logs`                       | Lượt quét QR công khai                                            |
-| `sync_mutations`                     | Chống trùng lặp khi mobile đồng bộ offline                        |
-| `batch_blockchain`                   | Trạng thái anchor blockchain cho sự kiện                          |
+```powershell
+npx expo start --lan --port 8082
+```
 
-Quy tắc nghiệp vụ cần đảm bảo trong database:
+## Chay Local De Phat Trien
 
-- `batch_events` và `audit_logs` là dữ liệu ghi thêm, không sửa/xóa tùy tiện.
-- Mỗi thay đổi trạng thái lô hàng cần có audit log.
-- Chứng chỉ phải gắn với lô hàng, nhà cung cấp upload ở trạng thái chờ duyệt và admin duyệt trước khi hiển thị công khai.
-- Trang trace công khai chỉ hiển thị dữ liệu phù hợp cho người dùng cuối, không yêu cầu đăng nhập.
+Local chi dung khi phat trien, khong phai cau hinh demo chinh.
 
-## Chạy Ứng Dụng Web
-
-Từ thư mục gốc `bluefood-app/`:
+Web:
 
 ```powershell
 corepack pnpm dev:web
 ```
 
-Mở trình duyệt tại:
-
-```text
-http://localhost:3000
-```
-
-Các route quan trọng:
-
-| Route            | Chức năng                        |
-| ---------------- | -------------------------------- |
-| `/login`         | Đăng nhập                        |
-| `/dashboard`     | Dashboard quản trị               |
-| `/batches`       | Quản lý lô hàng                  |
-| `/products`      | Quản lý sản phẩm master          |
-| `/suppliers`     | Quản lý nhà cung cấp             |
-| `/shipments`     | Quản lý vận chuyển               |
-| `/certificates`  | Quản lý chứng chỉ                |
-| `/audit-logs`    | Xem audit log                    |
-| `/reports`       | Báo cáo và export CSV            |
-| `/portal`        | Cổng nhà cung cấp                |
-| `/trace/[lotId]` | Trang truy xuất công khai qua QR |
-
-## Chạy Ứng Dụng Mobile
-
-Từ thư mục gốc `bluefood-app/`:
+Mobile LAN local:
 
 ```powershell
 corepack pnpm --filter mobile start:lan
 ```
 
-Nếu cần dùng tunnel:
+Khi chay local tren dien thoai that, `EXPO_PUBLIC_API_URL` phai la IP cua may tinh, vi dien thoai khong truy cap duoc `localhost` cua may tinh.
 
-```powershell
-corepack pnpm --filter mobile start:tunnel
-```
+## Route Chinh
 
-Trường hợp tunnel lỗi do ngrok/kết nối mạng, ưu tiên `start:lan` và đảm bảo điện thoại cùng mạng Wi-Fi với máy tính.
+| Route | Chuc nang |
+| --- | --- |
+| `/login` | Dang nhap |
+| `/dashboard` | Dashboard quan tri |
+| `/batches` | Quan ly lo hang |
+| `/products` | Quan ly san pham master |
+| `/suppliers` | Quan ly nha cung cap |
+| `/shipments` | Quan ly van chuyen |
+| `/certificates` | Quan ly chung chi |
+| `/audit-logs` | Audit log |
+| `/reports` | Bao cao va export CSV |
+| `/portal` | Cong nha cung cap |
+| `/trace/[lotId]` | Trang truy xuat cong khai qua QR |
 
-## Chạy Worker Blockchain
+## Smart Contract Va Worker
 
-Worker chỉ cần khi muốn đẩy sự kiện lên blockchain:
-
-```powershell
-corepack pnpm --filter web worker
-```
-
-Biến môi trường cần có: `REDIS_URL`, `POLYGON_RPC_URL`, `BLOCKCHAIN_SUBMITTER_PRIVATE_KEY`, `CONTRACT_ADDRESS`, `ANCHOR_WEBHOOK_SECRET`.
-
-## Smart Contract
-
-Biên dịch contract:
+Bien dich contract:
 
 ```powershell
 corepack pnpm --filter @bluefood/contracts compile
-```
-
-Deploy local:
-
-```powershell
-corepack pnpm --filter @bluefood/contracts deploy:local
 ```
 
 Deploy testnet Amoy:
@@ -236,38 +203,29 @@ Deploy testnet Amoy:
 corepack pnpm --filter @bluefood/contracts deploy:amoy
 ```
 
-Sau khi deploy, cập nhật `CONTRACT_ADDRESS` trong `apps/web/.env.local`.
-
-## Kiểm Tra
-
-Chạy typecheck từng ứng dụng:
+Worker anchor blockchain:
 
 ```powershell
-corepack pnpm --filter web typecheck
-corepack pnpm --filter mobile typecheck
+corepack pnpm --filter web worker
 ```
 
-Chạy typecheck toàn workspace:
+Worker can `REDIS_URL`, `POLYGON_RPC_URL`, `BLOCKCHAIN_SUBMITTER_PRIVATE_KEY`, `CONTRACT_ADDRESS`, `ANCHOR_WEBHOOK_SECRET`.
 
-```powershell
-corepack pnpm typecheck
-```
+## Luong Demo De Kiem Thu
 
-## Luồng Demo Để Kiểm Thử
+1. Mo web Vercel va dang nhap admin.
+2. Tao hoac chon lo hang trong `/batches`.
+3. Mo trang public `/trace/[lotId]` va kiem tra QR.
+4. Mo Expo Go, dang nhap bang tai khoan `store_staff`.
+5. Quet QR lo hang, xac nhan da nhan hoac bao loi.
+6. Tat mang tren dien thoai, tao thao tac offline, bat mang lai va dong bo.
+7. Quay lai web Vercel kiem tra trang thai lo hang, lich su su kien va audit log.
+8. Dang nhap portal supplier, them note/chung chi gan voi lo hang.
+9. Dang nhap admin kiem tra chung chi va trang trace cong khai.
 
-1. Đăng nhập web bằng tài khoản admin.
-2. Tạo hoặc chọn một lô hàng trong `/batches`.
-3. Kiểm tra QR và mở trang công khai `/trace/[lotId]`.
-4. Đăng nhập mobile bằng tài khoản nhân viên cửa hàng.
-5. Quét QR lô hàng, xác nhận đã nhận hoặc báo lỗi.
-6. Tắt mạng, tạo thao tác offline, sau đó bật mạng và đồng bộ lại.
-7. Quay lại web kiểm tra trạng thái lô hàng, lịch sử sự kiện và audit log.
-8. Đăng nhập portal nhà cung cấp, upload chứng chỉ gắn với lô hàng.
-9. Đăng nhập admin để duyệt chứng chỉ, sau đó kiểm tra chứng chỉ trên trace công khai.
+## Luu Y Khi Nop Do An
 
-## Lưu Ý Khi Nộp Source
-
-- Không commit `node_modules`, `.next`, `.expo`, `dist`, cache build, log, file `.env` thật hoặc khóa bí mật.
-- Cần kèm README này và script database trong thư mục `supabase/`.
-- Khi nộp theo yêu cầu đồ án, nên nén toàn bộ source code thành file zip riêng; không chỉ nộp mỗi đường link repository.
-- File `.env.local.example` và `.env.example` được phép commit để giảng viên biết cần cấu hình biến nào.
+- Khong commit `node_modules`, `.next`, `.expo`, `dist`, log, file `.env` that hoac khoa bi mat.
+- Can kem source code, README va script database trong thu muc `supabase/`.
+- Neu nop zip, nen nen toan bo thu muc `bluefood-app/` sau khi da loai bo cache build va dependency.
+- File `.env.local.example` va `.env.example` duoc commit de nguoi cham biet can cau hinh bien nao.
