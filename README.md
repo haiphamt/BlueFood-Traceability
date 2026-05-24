@@ -105,7 +105,7 @@ Them Environment Variables tren Vercel:
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-NEXT_PUBLIC_APP_URL=https://your-bluefood.vercel.app
+NEXT_PUBLIC_APP_URL=https://bluefood.vercel.app
 
 POLYGON_RPC_URL=https://your-rpc-url
 BLOCKCHAIN_SUBMITTER_PRIVATE_KEY=0x...
@@ -124,7 +124,7 @@ Trong do bat buoc cho web demo chinh la:
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `NEXT_PUBLIC_APP_URL`
 
-Sau khi deploy xong, cap nhat `NEXT_PUBLIC_APP_URL` thanh domain Vercel that, vi QR public va mobile se goi API theo domain nay.
+Sau khi deploy xong, dam bao `NEXT_PUBLIC_APP_URL` dung domain Vercel that `https://bluefood.vercel.app`, vi QR public va mobile se goi API theo domain nay.
 
 ## Cau Hinh Mobile Expo Go
 
@@ -137,7 +137,7 @@ Copy-Item apps/mobile/.env.example apps/mobile/.env
 Noi dung can tro ve domain Vercel:
 
 ```env
-EXPO_PUBLIC_API_URL=https://your-bluefood.vercel.app
+EXPO_PUBLIC_API_URL=https://bluefood.vercel.app
 ```
 
 Chay mobile bang tunnel:
