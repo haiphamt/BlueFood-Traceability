@@ -157,6 +157,8 @@ http://localhost:3000
 
 ### Bước 5: Chạy mobile bằng Expo Go
 
+Nếu chạy tunnel lần đầu trên máy mới, cần cấu hình ngrok authtoken theo hướng dẫn tại https://dashboard.ngrok.com/get-started/your-authtoken. Token chỉ lưu trên máy local, không đưa vào source code.
+
 ```powershell
 cd apps/mobile
 npx expo start --tunnel --port 8082
@@ -255,6 +257,8 @@ EXPO_PUBLIC_API_URL=https://bluefood.vercel.app
 ```
 
 Chạy tunnel:
+
+Nếu máy chưa cấu hình ngrok authtoken, cần đăng nhập ngrok và cài authtoken local trước khi chạy tunnel.
 
 ```powershell
 cd apps/mobile
