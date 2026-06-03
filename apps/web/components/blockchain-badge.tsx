@@ -47,6 +47,11 @@ export function BlockchainBadge({
     txHash && polygonscanBaseUrl ? `${polygonscanBaseUrl}/tx/${txHash}` : null
   );
 
+  useEffect(() => {
+    setStatus(initialStatus);
+    setExplorerUrl(txHash && polygonscanBaseUrl ? `${polygonscanBaseUrl}/tx/${txHash}` : null);
+  }, [initialStatus, polygonscanBaseUrl, txHash]);
+
   // Poll for pending status every 15 seconds
   useEffect(() => {
     if (status !== 'pending' || !jobId) return;

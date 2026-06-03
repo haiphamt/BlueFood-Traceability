@@ -1,7 +1,7 @@
 import { createSupabaseServerClient, createSupabaseServiceClient } from '@/lib/supabase/server';
 import { apiOk, apiError, ERRORS } from '@/lib/api-response';
 
-const CAN_CREATE_BATCH = new Set(['admin', 'supplier', 'store_staff']);
+const CAN_CREATE_BATCH = new Set(['admin', 'supplier']);
 
 export async function GET() {
   const supabase = await createSupabaseServerClient();

@@ -73,6 +73,14 @@ export default async function BatchDetailPage({ params }: PageProps) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('user_id', user.id)
+    .single();
+  const canAddBatchEvent = ['admin', 'supplier', 'transporter'].includes(profile?.role ?? '');
+  const canLinkCertificate = ['admin', 'supplier'].includes(profile?.role ?? '');
+
   const service = createSupabaseServiceClient();
 
   const { data: batch } = await service
@@ -214,7 +222,7 @@ export default async function BatchDetailPage({ params }: PageProps) {
             <Globe size={15} />
             Trang công khai
           </Link>
-          <AddEventDialog batchCode={batchCode} />
+          {canAddBatchEvent && <AddEventDialog batchCode={batchCode} />}
         </div>
       </div>
 
@@ -346,13 +354,15 @@ export default async function BatchDetailPage({ params }: PageProps) {
             ) : (
               <p className="admin-muted text-sm text-center py-4">Chưa có chứng chỉ</p>
             )}
-            <Link
-              href={`/certificates/new?batch_id=${batch.id}`}
-              className="admin-secondary-button w-full mt-3 py-2 text-sm font-medium"
-            >
-              <Plus size={14} />
-              Liên kết chứng chỉ mới
-            </Link>
+            {canLinkCertificate && (
+              <Link
+                href={`/certificates/new?batch_id=${batch.id}`}
+                className="admin-secondary-button w-full mt-3 py-2 text-sm font-medium"
+              >
+                <Plus size={14} />
+                Liên kết chứng chỉ mới
+              </Link>
+            )}
           </div>
 
           {/* Blockchain transparency */}

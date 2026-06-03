@@ -9,6 +9,7 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "worker": "tsx --env-file=.env.local scripts/run-worker.ts",
+    "anchor-one": "tsx --env-file=.env.local scripts/anchor-one-batch.ts",
     "bulk-anchor": "tsx --env-file=.env.local scripts/bulk-anchor-batches.ts",
     "check:pdf-vietnamese": "node scripts/check-pdf-vietnamese-text.mjs"
   },
@@ -25,6 +26,7 @@
     "clsx": "^2.1.1",
     "dotenv": "^16.4.7",
     "ethers": "^6.13.0",
+    "exceljs": "^4.4.0",
     "ioredis": "^5.3.0",
     "lucide-react": "^0.395.0",
     "next": "^14.2.5",

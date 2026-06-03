@@ -72,7 +72,7 @@ export async function POST(
   if (!user) return apiError(ERRORS.UNAUTHORIZED.code, ERRORS.UNAUTHORIZED.message, 401);
 
   const { data: profile } = await supabase.from('profiles').select('role').eq('user_id', user.id).single();
-  if (!profile || !['admin', 'supplier', 'transporter', 'store_staff'].includes(profile.role)) {
+  if (!profile || !['admin', 'supplier', 'transporter'].includes(profile.role)) {
     return apiError(ERRORS.FORBIDDEN.code, ERRORS.FORBIDDEN.message, 403);
   }
 

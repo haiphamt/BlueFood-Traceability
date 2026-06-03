@@ -1,12 +1,23 @@
 import { requireRole } from '@/lib/auth';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import Link from 'next/link';
-import { Plus, Pencil, Search, Home } from 'lucide-react';
+import { CheckCircle2, PauseCircle, Plus, Pencil, Search, Home } from 'lucide-react';
 import { formatDateTime } from '@/lib/utils';
-import { DeleteButton } from '@/components/delete-button';
+import { SupplierLifecycleActions } from '@/components/admin/supplier-lifecycle-actions';
 
 interface PageProps {
   searchParams: Promise<{ q?: string }>;
+}
+
+function SupplierPortalStatusBadge({ status }: { status?: string | null }) {
+  const suspended = status === 'suspended';
+
+  return (
+    <span className={`admin-badge gap-1.5 font-semibold ${suspended ? 'admin-badge-red' : 'admin-badge-green'}`}>
+      {suspended ? <PauseCircle size={10} /> : <CheckCircle2 size={10} />}
+      {suspended ? 'Tạm ngưng' : 'Hoạt động'}
+    </span>
+  );
 }
 
 export default async function SuppliersPage({ searchParams }: PageProps) {
@@ -72,7 +83,7 @@ export default async function SuppliersPage({ searchParams }: PageProps) {
           <table className="w-full text-sm">
             <thead>
               <tr className="admin-table-head-row">
-                {['Tên', 'Email', 'Điện thoại', 'Tỉnh / Vùng', 'Ngày tạo', 'Hành động'].map((h) => (
+                {['Tên', 'Email', 'Điện thoại', 'Tỉnh / Vùng', 'Trạng thái portal', 'Ngày tạo', 'Hành động'].map((h) => (
                   <th key={h} className="admin-th text-left">
                     {h}
                   </th>
@@ -82,7 +93,7 @@ export default async function SuppliersPage({ searchParams }: PageProps) {
             <tbody>
               {!suppliers || suppliers.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="admin-muted-strong px-4 py-12 text-center text-sm">
+                  <td colSpan={7} className="admin-muted-strong px-4 py-12 text-center text-sm">
                     Không tìm thấy nhà cung cấp nào
                   </td>
                 </tr>
@@ -96,9 +107,12 @@ export default async function SuppliersPage({ searchParams }: PageProps) {
                     <td className="admin-muted px-4 py-3">{s.contact_email ?? '—'}</td>
                     <td className="admin-muted px-4 py-3">{s.phone ?? '—'}</td>
                     <td className="admin-muted px-4 py-3">{s.province ?? '—'}</td>
+                    <td className="px-4 py-3">
+                      <SupplierPortalStatusBadge status={s.portal_status} />
+                    </td>
                     <td className="admin-muted-strong px-4 py-3 text-xs">{formatDateTime(s.created_at)}</td>
                     <td className="px-4 py-3">
-                      <div className="flex items-center gap-1">
+                      <div className="flex flex-wrap items-center gap-1.5">
                         <Link
                           href={`/suppliers/${s.id}/edit`}
                           className="admin-icon-button p-1.5"
@@ -106,7 +120,7 @@ export default async function SuppliersPage({ searchParams }: PageProps) {
                         >
                           <Pencil size={14} />
                         </Link>
-                        <DeleteButton id={s.id} name={s.name} resource="suppliers" />
+                        <SupplierLifecycleActions id={s.id} name={s.name} portalStatus={s.portal_status} />
                       </div>
                     </td>
                   </tr>

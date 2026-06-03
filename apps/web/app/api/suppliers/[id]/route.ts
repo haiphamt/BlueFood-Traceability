@@ -1,4 +1,4 @@
-import { createSupabaseServerClient } from '@/lib/supabase/server';
+import { createSupabaseServerClient, createSupabaseServiceClient } from '@/lib/supabase/server';
 import { apiOk, apiError, ERRORS } from '@/lib/api-response';
 import { revalidatePath } from 'next/cache';
 
@@ -6,10 +6,15 @@ interface Params { params: Promise<{ id: string }> }
 
 function revalidateSupplierViews() {
   revalidatePath('/suppliers');
+  revalidatePath('/settings');
   revalidatePath('/batches');
   revalidatePath('/batches/new');
   revalidatePath('/dashboard');
   revalidatePath('/reports');
+  revalidatePath('/admin/suppliers');
+  revalidatePath('/portal/dashboard');
+  revalidatePath('/portal/batches');
+  revalidatePath('/portal/certificates');
 }
 
 export async function GET(_: Request, { params }: Params) {
@@ -54,11 +59,55 @@ export async function DELETE(_: Request, { params }: Params) {
   const { data: profile } = await supabase.from('profiles').select('role').eq('user_id', user.id).single();
   if (!profile || profile.role !== 'admin') return apiError(ERRORS.FORBIDDEN.code, ERRORS.FORBIDDEN.message, 403);
 
-  const { count } = await supabase.from('batches').select('id', { count: 'exact', head: true }).eq('supplier_id', id);
-  if ((count ?? 0) > 0) return apiError(ERRORS.VALIDATION_ERROR.code, `Không thể xóa — nhà cung cấp đang có ${count} lô hàng`, 422);
+  const service = createSupabaseServiceClient();
+  const { data: supplier, error: supplierError } = await service
+    .from('suppliers')
+    .select('*')
+    .eq('id', id)
+    .single();
 
-  const { error } = await supabase.from('suppliers').delete().eq('id', id);
+  if (supplierError || !supplier) {
+    return apiError(ERRORS.NOT_FOUND.code, 'Không tìm thấy nhà cung cấp', 404);
+  }
+
+  const [
+    { count: batchCount, error: batchCountError },
+    { count: certificateCount, error: certificateCountError },
+  ] = await Promise.all([
+    service.from('batches').select('id', { count: 'exact', head: true }).eq('supplier_id', id),
+    service.from('certificates').select('id', { count: 'exact', head: true }).eq('supplier_id', id),
+  ]);
+
+  if (batchCountError) return apiError(ERRORS.INTERNAL.code, batchCountError.message, 500);
+  if (certificateCountError) return apiError(ERRORS.INTERNAL.code, certificateCountError.message, 500);
+
+  const blockerMessages: string[] = [];
+  if ((batchCount ?? 0) > 0) blockerMessages.push(`${batchCount} lô hàng`);
+  if ((certificateCount ?? 0) > 0) blockerMessages.push(`${certificateCount} chứng chỉ`);
+
+  if (blockerMessages.length > 0) {
+    return apiError(
+      ERRORS.VALIDATION_ERROR.code,
+      `Không thể xóa cứng vì nhà cung cấp đang có ${blockerMessages.join(' và ')}. Hãy tạm ngưng đối tác để giữ lịch sử truy xuất.`,
+      422
+    );
+  }
+
+  const { error } = await service.from('suppliers').delete().eq('id', id);
   if (error) return apiError(ERRORS.INTERNAL.code, error.message, 500);
+
+  const { error: auditError } = await service.from('audit_logs').insert({
+    entity_type: 'suppliers',
+    entity_id: id,
+    actor_id: user.id,
+    action: 'delete',
+    summary: `Xóa nhà cung cấp ${supplier.name}`,
+    old_data: supplier,
+    new_data: null,
+  });
+
+  if (auditError) return apiError(ERRORS.INTERNAL.code, auditError.message, 500);
+
   revalidateSupplierViews();
   return apiOk({ deleted: true });
 }

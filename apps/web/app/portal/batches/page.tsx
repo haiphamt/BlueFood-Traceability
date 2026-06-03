@@ -1,6 +1,8 @@
 import { ClickableTableRow } from '@/components/clickable-table-row';
 import { requirePortalContext } from '@/lib/portal';
 import { formatDate } from '@/lib/utils';
+import Link from 'next/link';
+import { Plus } from 'lucide-react';
 
 const STATUS_LABEL: Record<string, string> = {
   created: 'Đã tạo',
@@ -59,9 +61,15 @@ export default async function PortalBatchesPage() {
 
   return (
     <div className="space-y-5">
-      <div>
-        <h1 className="portal-page-title">Lô hàng của tôi</h1>
-        <p className="mt-1 text-sm portal-muted">Chỉ xem dữ liệu thuộc nhà cung cấp của bạn. Tạo lô hàng do admin/ops thực hiện.</p>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h1 className="portal-page-title">Lô hàng của tôi</h1>
+          <p className="mt-1 text-sm portal-muted">Chỉ xem dữ liệu thuộc nhà cung cấp của bạn. Nhà cung cấp có thể tạo lô hàng mới cho chính đơn vị của mình.</p>
+        </div>
+        <Link href="/portal/batches/new" className="portal-button-primary w-fit">
+          <Plus size={16} />
+          Tạo lô hàng
+        </Link>
       </div>
       <div className="portal-card">
         <div className="overflow-x-auto">

@@ -110,6 +110,13 @@ export default async function BatchesPage({ searchParams }: PageProps) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('user_id', user.id)
+    .single();
+  const canManageBatches = profile?.role === 'admin';
+
   const service = createSupabaseServiceClient();
 
   // ── Cross-table search: resolve product + supplier IDs matching the query ──
@@ -190,15 +197,17 @@ export default async function BatchesPage({ searchParams }: PageProps) {
               Quản lý Lô hàng
             </h1>
           </div>
-          <div className="flex items-center gap-3">
-            <Link
-              href="/batches/new"
-              className="admin-primary-button"
-            >
-              <Plus size={15} />
-              Tạo lô mới
-            </Link>
-          </div>
+          {canManageBatches && (
+            <div className="flex items-center gap-3">
+              <Link
+                href="/batches/new"
+                className="admin-primary-button"
+              >
+                <Plus size={15} />
+                Tạo lô mới
+              </Link>
+            </div>
+          )}
         </div>
       </div>
 
@@ -224,7 +233,7 @@ export default async function BatchesPage({ searchParams }: PageProps) {
             <tbody style={{ borderTop: 'none' }}>
               {!batches || batches.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="admin-muted px-4 py-16 text-center text-sm">
+                  <td colSpan={7} className="admin-muted px-4 py-16 text-center text-sm">
                     {hasFilters ? 'Không tìm thấy lô hàng phù hợp' : 'Chưa có lô hàng nào'}
                   </td>
                 </tr>
@@ -306,7 +315,7 @@ export default async function BatchesPage({ searchParams }: PageProps) {
                             </button>
                           )}
 
-                          {!isSold && !isRecalled ? (
+                          {canManageBatches && !isSold && !isRecalled ? (
                             <Link
                               href={`/batches/${batch.batch_code}`}
                               className="admin-icon-button p-1.5"
@@ -314,11 +323,11 @@ export default async function BatchesPage({ searchParams }: PageProps) {
                             >
                               <Pencil size={17} />
                             </Link>
-                          ) : (
+                          ) : canManageBatches ? (
                             <button disabled className="admin-icon-button p-1.5 opacity-30 cursor-not-allowed" title="Không thể sửa">
                               <Pencil size={17} />
                             </button>
-                          )}
+                          ) : null}
                         </div>
                       </td>
                     </tr>
