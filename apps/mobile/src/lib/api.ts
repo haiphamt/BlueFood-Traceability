@@ -71,6 +71,84 @@ export type BatchSummaryData = {
   timeline?: BatchTimelineEvent[];
 };
 
+type InternalBatchDetailResponse = {
+  batchCode: string;
+  product?: { name?: string | null } | null;
+  supplier?: { name?: string | null } | null;
+  batch?: {
+    quantity?: number | string | null;
+    unit?: string | null;
+    status?: string | null;
+    harvestDate?: string | null;
+    expirationDate?: string | null;
+    originLocation?: string | null;
+    notes?: string | null;
+  } | null;
+  certificates?: Array<{
+    certificate_type?: string | null;
+    certificateType?: string | null;
+    type?: string | null;
+    issuer?: string | null;
+    certificate_number?: string | null;
+    certificateNumber?: string | null;
+    issued_at?: string | null;
+    issuedAt?: string | null;
+    expires_at?: string | null;
+    expiresAt?: string | null;
+    file_url?: string | null;
+    fileUrl?: string | null;
+  }>;
+  events?: Array<{
+    id?: string;
+    event_type?: string | null;
+    eventType?: string | null;
+    occurred_at?: string | null;
+    occurredAt?: string | null;
+    location_name?: string | null;
+    locationName?: string | null;
+    temperature_c?: number | null;
+    temperatureC?: number | null;
+    note?: string | null;
+    is_late?: boolean | null;
+    isLate?: boolean | null;
+    shipment?: { transporter_name?: string | null } | null;
+  }>;
+};
+
+function mapInternalBatchSummary(data: InternalBatchDetailResponse): BatchSummaryData {
+  return {
+    batchCode: data.batchCode,
+    productName: data.product?.name,
+    supplierName: data.supplier?.name,
+    originLocation: data.batch?.originLocation,
+    quantity: data.batch?.quantity,
+    unit: data.batch?.unit,
+    status: data.batch?.status,
+    harvestDate: data.batch?.harvestDate,
+    expirationDate: data.batch?.expirationDate,
+    notes: data.batch?.notes,
+    certificates: (data.certificates ?? []).map((cert) => ({
+      type: cert.type ?? cert.certificateType ?? cert.certificate_type,
+      certificateType: cert.certificateType ?? cert.certificate_type ?? cert.type,
+      issuer: cert.issuer,
+      certificateNumber: cert.certificateNumber ?? cert.certificate_number,
+      issuedAt: cert.issuedAt ?? cert.issued_at,
+      expiresAt: cert.expiresAt ?? cert.expires_at,
+      fileUrl: cert.fileUrl ?? cert.file_url,
+    })),
+    timeline: (data.events ?? []).map((event) => ({
+      id: event.id,
+      eventType: event.eventType ?? event.event_type,
+      occurredAt: event.occurredAt ?? event.occurred_at,
+      locationName: event.locationName ?? event.location_name,
+      temperatureC: event.temperatureC ?? event.temperature_c,
+      note: event.note,
+      isLate: event.isLate ?? event.is_late,
+      transporterName: event.shipment?.transporter_name ?? null,
+    })),
+  };
+}
+
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
@@ -117,7 +195,21 @@ export async function login(email: string, password: string) {
 }
 
 export async function getBatchSummary(batchCode: string): Promise<BatchSummaryData> {
-  return request<BatchSummaryData>(`/api/public/trace/${batchCode}`, {
+  if (authToken) {
+    try {
+      const internal = await request<InternalBatchDetailResponse>(`/api/batches/${encodeURIComponent(batchCode)}`, {
+        cache: 'no-store',
+        headers: { 'Cache-Control': 'no-cache' },
+      });
+      return mapInternalBatchSummary(internal);
+    } catch (err: any) {
+      if (err?.status !== 401 && err?.status !== 403 && err?.status !== 404) {
+        throw err;
+      }
+    }
+  }
+
+  return request<BatchSummaryData>(`/api/public/trace/${encodeURIComponent(batchCode)}`, {
     cache: 'no-store',
     headers: { 'Cache-Control': 'no-cache' },
   });

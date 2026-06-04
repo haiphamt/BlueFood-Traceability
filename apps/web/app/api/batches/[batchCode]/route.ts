@@ -1,13 +1,32 @@
 import { createSupabaseServerClient, createSupabaseServiceClient } from '@/lib/supabase/server';
 import { apiOk, apiError, ERRORS } from '@/lib/api-response';
+import { createClient } from '@supabase/supabase-js';
+
+async function getAuthenticatedUser(request: Request) {
+  const authHeader = request.headers.get('authorization');
+  const bearerMatch = authHeader?.match(/^Bearer\s+(.+)$/i);
+
+  if (bearerMatch?.[1]) {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      { auth: { autoRefreshToken: false, persistSession: false } }
+    );
+    const { data: { user } } = await supabase.auth.getUser(bearerMatch[1].trim());
+    return user;
+  }
+
+  const supabase = await createSupabaseServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  return user;
+}
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ batchCode: string }> }
 ) {
   const { batchCode } = await params;
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const user = await getAuthenticatedUser(request);
   if (!user) return apiError(ERRORS.UNAUTHORIZED.code, ERRORS.UNAUTHORIZED.message, 401);
 
   const service = createSupabaseServiceClient();
@@ -33,7 +52,7 @@ export async function GET(
     (a: any, z: any) => new Date(a.occurred_at).getTime() - new Date(z.occurred_at).getTime()
   );
 
-  return apiOk({
+  const response = apiOk({
     batchCode: b.batch_code,
     product: b.products,
     supplier: b.suppliers,
@@ -55,4 +74,6 @@ export async function GET(
     events,
     auditLogs: auditLogs ?? [],
   });
+  response.headers.set('Cache-Control', 'no-store, max-age=0');
+  return response;
 }
